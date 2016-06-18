@@ -5,12 +5,24 @@ var svg = d3.select(".board").append("svg")
 .attr("width", 1000)
 .attr("height", 600)
 
+// Create links to the scoreboard
+var highScore = d3.select('.highscore span');
+var currentScore = d3.select('.current span');
+var collisions = d3.select('.collisions span');
+
+// Create timer 
+var timer = d3.timer(function(elapsed) {
+  currentScore.text(Math.floor(elapsed/100));
+});
+
+// Create drag behavior
 var drag = d3.behavior.drag()
     .on('drag', function () {
       player.attr('cx', d3.event.x)
             .attr('cy', d3.event.y);
     });
 
+// Create the player
 var player = svg.append('circle')
     .data([{x: 500, y: 300, r: 10}])
     .attr('r', function(d) {return d.r;})
@@ -18,6 +30,7 @@ var player = svg.append('circle')
     .attr('cy', function(d) {return d.y;})
     .call(drag);
     
+// Function that moves asteroids around the field
 var asteroids = function(data){
 
   var field = svg.selectAll("image")
@@ -28,10 +41,10 @@ var asteroids = function(data){
   field.transition().duration(500)
        .attr('x', function(d) {return d.x;})
        .attr('y', function(d) {return d.y;})
-       .attr('xlink:href', 'asteroid.png')
+       .attr('xlink:href', 'shuriken2.gif')
        .attr('class', 'asteroid')
-       .style('height', '50')
-       .style('width', '50');
+       .style('height', '80')
+       .style('width', '80');
 };
 
 setInterval(function() {
