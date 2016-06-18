@@ -28,9 +28,8 @@ var player = svg.append('circle')
     .attr('r', function(d) {return d.r;})
     .attr('cx', function(d) {return d.x;})
     .attr('cy', function(d) {return d.y;})
+    .attr('class', 'player')
     .call(drag);
-
-
     
 // Function that moves asteroids around the field
 var asteroids = function(data){
@@ -62,15 +61,21 @@ setInterval(function() {
   asteroids(positions);
 }, 1000);
 
-setInterval(function(){
-  d3.selectAll("image").each(function(node){
-    if (Math.abs(node.x - player.x) < 1000){
-      console.log("conflict");
-    }
-    // if (Math.abs(node.y - player.y) < 100){
-    //   console.log("conflict");
-    // }  
-  })
-}, 10)
-//asteroids([{x: 100, y: 100}, {x: 250, y: 200}]);
+var enemyX, enemyY, playerX, playerY;
+setInterval(function() {
+
+  var playerInner = d3.select('.player');
+  playerX = d3.select('.player').attr('cx');
+  playerY = d3.select('.player').attr('cy');
+
+  console.log(`${playerX}, ${playerY}`);
+  
+  var enemies = svg.selectAll('image')
+      .each(function() {
+        enemyX = this['x']['animVal']['value'];
+        enemyY = this['y']['animVal']['value'];
+
+        console.log(`${enemyX}, ${enemyY}`);
+      });
+}, 10);
 
