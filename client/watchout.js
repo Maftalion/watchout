@@ -10,7 +10,6 @@ var randomInt = function(min, max) {
 };
 
 // Create links to the scoreboard
-var highScore = d3.select('.highscore span');
 var currentScore = d3.select('.current span');
 var collisions = d3.select('.collisions span');
 var shurikens = d3.select('.shuriken span');
@@ -100,20 +99,16 @@ d3.timer(function() {
 
         if (collision(enemyX, enemyY, playerX, playerY)) {
           var current = parseInt(currentScore.text());
-          var high = parseInt(highScore.text());
           counter = 5;
           shurikens.text(counter);
 
-          if (current > high) {
-            highScore.text(current);
-            currentScore.text(0);
-            d3.timer(function(elapsed) {
-              currentScore.text(Math.floor(elapsed/100));
-            });
+          currentScore.text(0);
+          d3.timer(function(elapsed) {
+            currentScore.text(Math.floor(elapsed/100));
+          });
 
-            var collisionCount = parseInt(collisions.text()) + 1;
-            collisions.text(collisionCount);
-          }
+          var collisionCount = parseInt(collisions.text()) + 1;
+          collisions.text(collisionCount);
         }
       });
 });
