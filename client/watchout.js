@@ -2,8 +2,12 @@
 //Set Board and Black Background
 
 var svg = d3.select(".board").append("svg")
-.attr("width", 1000)
-.attr("height", 600)
+    .attr("width", 1000)
+    .attr("height", 600);
+
+var randomInt = function(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+};
 
 // Create links to the scoreboard
 var highScore = d3.select('.highscore span');
@@ -11,7 +15,7 @@ var currentScore = d3.select('.current span');
 var collisions = d3.select('.collisions span');
 
 // Create timer 
-var timer = d3.timer(function(elapsed) {
+d3.timer(function(elapsed) {
   currentScore.text(Math.floor(elapsed/100));
 });
 
@@ -46,36 +50,65 @@ var asteroids = function(data){
        .attr('class', 'asteroid')
        .style('height', '80')
        .style('width', '80');
+
+  field.exit().remove();
 };
 
-
+var counter = 5;
+setInterval(function(){
+  counter++
+}, 10000);
 setInterval(function() {
   var positions = [];
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < counter; i++) {
     var obj = {
-      x: Math.floor(Math.random() * 1000),
-      y: Math.floor(Math.random() * 600)
+      x: randomInt(0, 1000 - 80),
+      y: randomInt(0, 600 - 80)
     };
     positions.push(obj);
   }
   asteroids(positions);
 }, 1000);
 
+var collision = function(x1, y1, x2, y2) {
+  var distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  if (distance < 50) {
+    return true;
+  } 
+  return false;
+};
+
 var enemyX, enemyY, playerX, playerY;
-setInterval(function() {
+d3.timer(function() {
 
   var playerInner = d3.select('.player');
   playerX = d3.select('.player').attr('cx');
   playerY = d3.select('.player').attr('cy');
-
-  console.log(`${playerX}, ${playerY}`);
   
   var enemies = svg.selectAll('image')
       .each(function() {
-        enemyX = this['x']['animVal']['value'];
-        enemyY = this['y']['animVal']['value'];
+        enemyX = this['x']['animVal']['value'] + 40;
+        enemyY = this['y']['animVal']['value'] + 40;
 
-        console.log(`${enemyX}, ${enemyY}`);
+        if (collision(enemyX, enemyY, playerX, playerY)) {
+          var current = parseInt(currentScore.text());
+          var high = parseInt(highScore.text());
+          counter = 5;
+
+          if (current > high) {
+            highScore.text(current);
+            currentScore.text(0);
+            d3.timer(function(elapsed) {
+              currentScore.text(Math.floor(elapsed/100));
+            });
+
+            var collisionCount = parseInt(collisions.text()) + 1;
+            collisions.text(collisionCount);
+          }
+        }
       });
-}, 10);
+});
+
+
+
 
