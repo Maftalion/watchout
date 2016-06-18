@@ -13,6 +13,7 @@ var randomInt = function(min, max) {
 var highScore = d3.select('.highscore span');
 var currentScore = d3.select('.current span');
 var collisions = d3.select('.collisions span');
+var shurikens = d3.select('.shuriken span');
 
 // Create timer 
 d3.timer(function(elapsed) {
@@ -22,8 +23,12 @@ d3.timer(function(elapsed) {
 // Create drag behavior
 var drag = d3.behavior.drag()
     .on('drag', function () {
-      player.attr('cx', d3.event.x)
-            .attr('cy', d3.event.y);
+      var x = d3.event.x;
+      var y = d3.event.y; 
+      if (x < 1000 && x > 0 && y < 600 && y > 0) {
+        player.attr('cx', x)
+        .attr('cy', y);
+      }
     });
 
 // Create the player
@@ -55,9 +60,12 @@ var asteroids = function(data){
 };
 
 var counter = 5;
-setInterval(function(){
-  counter++
+
+setInterval(function() {
+  counter++;
+  shurikens.text(counter);
 }, 10000);
+
 setInterval(function() {
   var positions = [];
   for (var i = 0; i < counter; i++) {
@@ -94,6 +102,7 @@ d3.timer(function() {
           var current = parseInt(currentScore.text());
           var high = parseInt(highScore.text());
           counter = 5;
+          shurikens.text(counter);
 
           if (current > high) {
             highScore.text(current);
