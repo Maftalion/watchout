@@ -29,6 +29,8 @@ var player = svg.append('circle')
     .attr('cx', function(d) {return d.x;})
     .attr('cy', function(d) {return d.y;})
     .call(drag);
+
+
     
 // Function that moves asteroids around the field
 var asteroids = function(data){
@@ -47,6 +49,7 @@ var asteroids = function(data){
        .style('width', '80');
 };
 
+
 setInterval(function() {
   var positions = [];
   for (var i = 0; i < 2; i++) {
@@ -59,5 +62,15 @@ setInterval(function() {
   asteroids(positions);
 }, 1000);
 
+setInterval(function(){
+  d3.selectAll("image").each(function(node){
+    if (Math.abs(node.x - player.x) < 1000){
+      console.log("conflict");
+    }
+    // if (Math.abs(node.y - player.y) < 100){
+    //   console.log("conflict");
+    // }  
+  })
+}, 10)
 //asteroids([{x: 100, y: 100}, {x: 250, y: 200}]);
 
